@@ -1,0 +1,4 @@
+cd ~/personal/python/adventofcode
+ml Python/3.10.4-GCCcore-11.3.0
+source ~/personal/python/virtenvs/AoC/bin/activate
+source prepare_env_pwd
