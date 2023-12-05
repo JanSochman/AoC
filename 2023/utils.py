@@ -41,3 +41,12 @@ class StateMachine:
 #         int(bp.translate(BP2BINARY), base=2)
 #         for bp in puzzle_input.split("\n")
 #     ]
+
+
+
+    # integer = ps.digit.at_least(1).concat().map(int)
+    # card_id = ps.string("Card") >> ps.whitespace >> integer << ps.string(":") << ps.whitespace
+    # nums = integer.sep_by(ps.whitespace)
+    # ps_line = ps.seq(card_id, nums.sep_by(ps.whitespace >> ps.string("|") >> ps.whitespace))
+
+    # card_id, (winning_nums, nums_we_have) = ps_line.parse(line)

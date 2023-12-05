@@ -32,14 +32,12 @@ def part1(data):
     struct2 = ndimage.generate_binary_structure(2, 2)
     is_neigh = ndimage.binary_dilation(symbol_mask, structure=struct2).astype(symbol_mask.dtype)
     
-    i = 0
-    for L in data:
+    for i, L in enumerate(data):
         for x in re.finditer('(\d+)', L):
             num = int(x.group())
             is_close = np.any(is_neigh[i, x.span()[0]:x.span()[1]])
             if is_close:
                 total_sum += num
-        i += 1
 
     return total_sum
 
