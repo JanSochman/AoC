@@ -11,7 +11,7 @@ import re                           # for parsing using regular expressions
 from anytree import Node, RenderTree    # for building trees
 from scipy import ndimage
 import copy
-from collections import deque
+from collections import deque, Counter
 import parsy as ps
 import portion as P
 import math
@@ -25,20 +25,21 @@ def parse_input(input):
 
 # %% --------------------------------------------------
 def part1(data):
-    def get_hand(str):
-        _, cnts = np.unique(list(str), return_counts=True)
-        cnts = np.sort(cnts)[::-1]
-        if cnts[0] == 5:
+    def get_hand(cards):
+        cnts = Counter(cards)
+        cnts['X'] = 0       # to avoid empty 'second'
+        first, second = map(lambda x: x[1], cnts.most_common(2))
+        if first == 5:
             hand = 6
-        elif cnts[0] == 4:
+        elif first == 4:
             hand = 5
-        elif cnts[0] == 3 and cnts[1] == 2:
+        elif first == 3 and second == 2:
             hand = 4
-        elif cnts[0] == 3 and cnts[1] == 1:
+        elif first == 3 and second == 1:
             hand = 3
-        elif cnts[0] == 2 and cnts[1] == 2:
+        elif first == 2 and second == 2:
             hand = 2
-        elif cnts[0] == 2:
+        elif first == 2:
             hand = 1
         else:
             hand = 0
@@ -46,9 +47,7 @@ def part1(data):
         return hand
         
     trtable = str.maketrans({"2": "0", "3": "1", "4": "2", "5": "3", "6": "4", "7": "5", "8": "6", "9": "7", "T": "8", "J": "9", "Q": "A", "K": "B", "A": "C"})
-    all_cards = []
     all_bids = []
-    all_cards13 = []
     all_card_nums = []
 
     for row in range(len(data)):
@@ -56,12 +55,9 @@ def part1(data):
         hand = get_hand(cards)
         bid = int(bid)
         cards13 = cards.translate(trtable)
-        cards13 = str(hand) + cards13
-        cards_num = int(cards13, base=13)
+        cards_num = int(str(hand) + cards13, base=13)
         
-        all_cards.append(cards)
         all_bids.append(bid)
-        all_cards13.append(cards13)
         all_card_nums.append(cards_num)
 
     srt_idxs = np.argsort(all_card_nums)
@@ -103,36 +99,37 @@ D = P.create_api(IntInterval)
 # %% --------------------------------------------------
 # PART 2
 def part2(data):
-    def get_hand(str):
-        numJ = sum([1 for c in list(str) if c == 'J'])
-        hand_wo_J = [c for c in list(str) if c != 'J']
-
-        _, cnts = np.unique(list(hand_wo_J), return_counts=True)
-        cnts = np.sort(cnts)[::-1]
+    def get_hand(cards):
+        cnts_full = Counter(cards)
+        numJ = cnts_full['J']
         if numJ == 5:
             return 6
-        cnts[0] += numJ
-        if cnts[0] == 5:
+
+        cards_wo_J = cards.replace('J', '')
+
+        cnts = Counter(cards_wo_J)
+        cnts['X'] = 0       # to avoid empty 'second'
+        first, second = map(lambda x: x[1], cnts.most_common(2))
+        first += numJ
+        if first == 5:
             hand = 6
-        elif cnts[0] == 4:
+        elif first == 4:
             hand = 5
-        elif cnts[0] == 3 and cnts[1] == 2:
+        elif first == 3 and second == 2:
             hand = 4
-        elif cnts[0] == 3 and cnts[1] == 1:
+        elif first == 3 and second == 1:
             hand = 3
-        elif cnts[0] == 2 and cnts[1] == 2:
+        elif first == 2 and second == 2:
             hand = 2
-        elif cnts[0] == 2:
+        elif first == 2:
             hand = 1
         else:
             hand = 0
         
         return hand
         
-    trtable = str.maketrans({"2": "0", "3": "1", "4": "2", "5": "3", "6": "4", "7": "5", "8": "6", "9": "7", "T": "8", "J": "9", "Q": "A", "K": "B", "A": "C"})
-    all_cards = []
+    trtable = str.maketrans({"2": "1", "3": "2", "4": "3", "5": "4", "6": "5", "7": "6", "8": "7", "9": "8", "T": "9", "J": "0", "Q": "A", "K": "B", "A": "C"})
     all_bids = []
-    all_cards13 = []
     all_card_nums = []
 
     for row in range(len(data)):
@@ -140,12 +137,9 @@ def part2(data):
         hand = get_hand(cards)
         bid = int(bid)
         cards13 = cards.translate(trtable)
-        cards13 = str(hand) + cards13
-        cards_num = int(cards13, base=13)
+        cards_num = int(str(hand) + cards13, base=13)
         
-        all_cards.append(cards)
         all_bids.append(bid)
-        all_cards13.append(cards13)
         all_card_nums.append(cards_num)
 
     srt_idxs = np.argsort(all_card_nums)
