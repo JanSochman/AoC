@@ -91,12 +91,6 @@ res_full = part1(data_full)
 print(res_full)
 
 # %% --------------------------------------------------
-class IntInterval(P.AbstractDiscreteInterval):
-    _step = 1
-    
-D = P.create_api(IntInterval)
-
-# %% --------------------------------------------------
 # PART 2
 def part2(data):
     def get_hand(cards):
@@ -155,6 +149,3 @@ print(res_example)
 # %% --------------------------------------------------
 res_full = part2(data_full)
 print(res_full)
-
-
-# %% --------------------------------------------------
