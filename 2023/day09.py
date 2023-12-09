@@ -41,27 +41,13 @@ data_full = parse_input(puzzle.input_data)
 def part1(data):
     total = 0
     for L in data:
-        hists = []
+        pred = 0 
         hist = np.array(L.split(), np.int64)
         while hist.any():
-            hists.append(hist[-1])
+            pred += hist[-1]
             hist = hist[1:] - hist[:-1]
-        total += sum(hists)
+        total += pred
     return total
-    
-# def part1(data):
-#     sum = 0
-#     for L in data:
-#         hists = []
-#         hist = np.array(L.split(), np.int64)
-#         while hist.any():
-#             hists.append(hist.copy())
-#             hist = hist[1:] - hist[:-1]
-#         next_val = 0
-#         for h in reversed(hists):
-#             next_val += h[-1]
-#         sum += next_val
-#     return sum
 
 # %% --------------------------------------------------
 res_example = part1(data_example)
@@ -81,12 +67,12 @@ data_example = parse_input(example2)
 def part2(data):
     total = 0
     for L in data:
-        hists = []
+        pred = 0
         hist = np.array(L.split(), np.int64)
         while hist.any():
-            hists.append(hist[0])
+            pred += hist[0]
             hist = hist[:-1] - hist[1:]
-        total += sum(hists)
+        total += pred
     return total
 
 # %% --------------------------------------------------
