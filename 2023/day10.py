@@ -46,34 +46,34 @@ data_example = parse_input(example1)
 data_full = parse_input(puzzle.input_data)
 
 # %% --------------------------------------------------
-# navigate from key[0] being entered from key[1] direction.
-# values: ((row_delta, col_delta), where_from_coming)
-navig = {"FS": ((0, 1), 'W'),
-        "FE": ((1, 0), 'N'),
-        "JN": ((0, -1), 'E'),
-        "JW": ((-1, 0), 'S'),
-        "LN": ((0, 1), 'W'),
-        "LE": ((-1, 0), 'S'),
-        "7W": ((+1, 0), 'N'),
-        "7S": ((0, -1), 'E'),
-        "-E": ((0, -1), 'E'),
-        "-W": ((0, 1), 'W'),
-        "|N": ((1, 0), 'N'),
-        "|S": ((-1, 0), 'S')}
+# key: (cur_value, entered_from), values: ((row_delta, col_delta), where_from_coming)
+navig = {("F", "S"): ((0, 1), 'W'),
+         ("F", "E"): ((1, 0), 'N'),
+         ("J", "N"): ((0, -1), 'E'),
+         ("J", "W"): ((-1, 0), 'S'),
+         ("L", "N"): ((0, 1), 'W'),
+         ("L", "E"): ((-1, 0), 'S'),
+         ("7", "W"): ((+1, 0), 'N'),
+         ("7", "S"): ((0, -1), 'E'),
+         ("-", "E"): ((0, -1), 'E'),
+         ("-", "W"): ((0, 1), 'W'),
+         ("|", "N"): ((1, 0), 'N'),
+         ("|", "S"): ((-1, 0), 'S')}
+
 # to disambiguate the S position pipe
 start_dir = {'F': ['N', 'W'],
-            'J': ['S', 'E'],
-            'L': ['S', 'W'],
-            '7': ['E', 'N'],
-            '-': ['W', 'E'],
-            '|': ['N', 'S']}
+             'J': ['S', 'E'],
+             'L': ['S', 'W'],
+             '7': ['E', 'N'],
+             '-': ['W', 'E'],
+             '|': ['N', 'S']}
 
 def part1(data):
     W = len(data[0])
     H = len(data)
 
     # S position
-    s_pos = [i for i,c in enumerate("".join(data)) if c=='S'][0]
+    s_pos = "".join(data).find('S')
     s_row = s_pos // W
     s_col = s_pos % W
     
@@ -97,29 +97,25 @@ def part1(data):
 
     # possible directions from the start position
     cur_symbol = s_symbol
-    dirs = []
+    wf_dirs = []
     for d in ['S', 'N', 'E', 'W']:
-        if s_symbol + d in navig:
-           dirs.append(d) 
-    left_pos = [s_row, s_col]
-    left_where_from = dirs[0]
-    right_pos = [s_row, s_col]
-    right_where_from = dirs[1]
+        if (s_symbol, d) in navig:
+           wf_dirs.append(d) 
+    pos = [s_row, s_col]
+    where_from = wf_dirs[0]
     
     # the animal hunt
     steps = 0
     starting = True
-    while starting or (left_pos[0] != right_pos[0] or left_pos[1] != right_pos[1]):
-        cur_symbol = data[left_pos[0]][left_pos[1]]
-        left_pos = [i + j for i, j in zip(left_pos, navig[cur_symbol + left_where_from][0])]
-        left_where_from = navig[cur_symbol + left_where_from][1]
+    while starting or (pos[0] != s_row or pos[1] != s_col):
+        cur_symbol = data[pos[0]][pos[1]]
+        pos = [i + j for i, j in zip(pos, navig[(cur_symbol, where_from)][0])]
+        where_from = navig[(cur_symbol, where_from)][1]
 
-        cur_symbol = data[right_pos[0]][right_pos[1]]
-        right_pos = [i + j for i, j in zip(right_pos, navig[cur_symbol + right_where_from][0])]
-        right_where_from = navig[cur_symbol + right_where_from][1]
-
-        steps +=1
+        steps += 1
         starting = False
+        
+    steps = steps // 2
 
     return steps
 
@@ -174,7 +170,7 @@ def part2(data):
     H = len(data)
 
     # S position
-    s_pos = [i for i,c in enumerate("".join(data)) if c=='S'][0]
+    s_pos = "".join(data).find('S')
     s_row = s_pos // W
     s_col = s_pos % W
     
@@ -198,12 +194,12 @@ def part2(data):
 
     # possible directions from the start position
     cur_symbol = s_symbol
-    dirs = []
+    wf_dirs = []
     for d in ['S', 'N', 'E', 'W']:
-        if s_symbol + d in navig:
-           dirs.append(d) 
+        if (s_symbol, d) in navig:
+           wf_dirs.append(d) 
     pos = [s_row, s_col]
-    where_from = dirs[0]
+    where_from = wf_dirs[0]
     
     # the animal hunt (single direction only to simplify the code)
     clear_map = np.empty((H, W), dtype='<U1')
@@ -214,15 +210,15 @@ def part2(data):
     starting = True
     while starting or (pos[0] != s_row or pos[1] != s_col):
         cur_symbol = data[pos[0]][pos[1]]
-        pos = [i + j for i, j in zip(pos, navig[cur_symbol + where_from][0])]
-        where_from = navig[cur_symbol + where_from][1]
+        pos = [i + j for i, j in zip(pos, navig[(cur_symbol, where_from)][0])]
+        where_from = navig[(cur_symbol, where_from)][1]
         clear_map[pos[0], pos[1]] = data[pos[0]][pos[1]]
 
-        steps +=1
+        steps += 1
         starting = False
         
     # compute the area (essentially the scanline fill algorithm)
-    X = np.zeros((H, W), dtype=np.int64)
+    # X = np.zeros((H, W), dtype=np.int64)
     area = 0
     for row in range(H):
         isin = False
@@ -243,7 +239,7 @@ def part2(data):
                 isin = not isin
                 prev_c = c
             if c == '.' and isin:
-                X[row, col] = 1
+                # X[row, col] = 1
                 area += 1
 
     return area
