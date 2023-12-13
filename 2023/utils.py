@@ -30,6 +30,10 @@ class StateMachine:
             # Move the line pointer
             current_line += 1
 
+# import operator
+# a = (1,2,3)
+# b = (5,6,7)
+# c = tuple(map(operator.add, a, b))
 
 # ----------------------------------------------
 # BP2BINARY = str.maketrans({"F": "0", "B": "1", "L": "0", "R": "1"})
@@ -44,9 +48,14 @@ class StateMachine:
 
 
 
-    # integer = ps.digit.at_least(1).concat().map(int)
-    # card_id = ps.string("Card") >> ps.whitespace >> integer << ps.string(":") << ps.whitespace
-    # nums = integer.sep_by(ps.whitespace)
-    # ps_line = ps.seq(card_id, nums.sep_by(ps.whitespace >> ps.string("|") >> ps.whitespace))
+# integer = ps.digit.at_least(1).concat().map(int)
+# card_id = ps.string("Card") >> ps.whitespace >> integer << ps.string(":") << ps.whitespace
+# nums = integer.sep_by(ps.whitespace)
+# ps_line = ps.seq(card_id, nums.sep_by(ps.whitespace >> ps.string("|") >> ps.whitespace))
 
-    # card_id, (winning_nums, nums_we_have) = ps_line.parse(line)
+# card_id, (winning_nums, nums_we_have) = ps_line.parse(line)
+
+
+# close-form Fibonacci numbers (source: https://orlp.net/blog/magical-fibonacci-formulae/)
+f = lambda n:(b:=2<<n)**n*b//(b*b-b-1)%b
+[f(n) for n in range(10)]
