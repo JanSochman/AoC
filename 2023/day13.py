@@ -21,8 +21,8 @@ import math
 
 # %% --------------------------------------------------
 def parse_input(input):
-    lines = input.split('\n')
-    return lines
+    # lines = input.split('\n')
+    return input
 
 # %% --------------------------------------------------
 # ========== PART 1 ==========
@@ -51,31 +51,23 @@ data_example = parse_input(example1)
 data_full = parse_input(puzzle.input_data)
 
 # %% --------------------------------------------------
-def test_symmetry(M):
+def test_symmetry(M, val=0):
     W = M.shape[1]
     for c in range(W-1):
         width = min(c+1, W-c-1)
-        if np.sum(np.abs(M[:, c+1-width:c+1][:, ::-1] - M[:, c+1:c+1+width])) == 0:
+        if np.sum(np.abs(M[:, c+1-width:c+1][:, ::-1] - M[:, c+1:c+1+width])) == val:
             return c + 1
     return 0
 
-def part1(data):
+def part1(data, val=0):
     sum_number = 0
-    map2bin = str.maketrans(".#", "01")
-    M = []
-    for L in data:
-        if not L:
-            M = np.array(M)
-            sum_number += test_symmetry(M)
-            sum_number += 100 * test_symmetry(M.T)
-            M = []
-        else:
-            M.append([int(x) for x in L.translate(map2bin)])
+    blocks = data.split('\n\n')
 
-    M = np.array(M)
-    sum_number += test_symmetry(M)
-    sum_number += 100 * test_symmetry(M.T)
-    
+    for block in blocks:
+        M = np.array([[int(0 if c == '.' else 1) for c in row] for row in block.split('\n')])
+        sum_number += test_symmetry(M, val)
+        sum_number += 100 * test_symmetry(M.T, val)
+
     return sum_number
 
 # %% --------------------------------------------------
@@ -93,30 +85,8 @@ example2 = example1
 data_example = parse_input(example2)
 
 # %% --------------------------------------------------
-def test_symmetry2(M):
-    W = M.shape[1]
-    for c in range(W-1):
-        width = min(c+1, W-c-1)
-        if np.sum(np.abs(M[:, c+1-width:c+1][:, ::-1] - M[:, c+1:c+1+width])) == 1:
-            return c + 1
-    return 0
-
 def part2(data):
-    sum_number = 0
-    map2bin = str.maketrans(".#", "01")
-    M = []
-    for L in data:
-        if not L:
-            M = np.array(M)
-            sum_number += test_symmetry2(M)
-            sum_number += 100 * test_symmetry2(M.T)
-            M = []
-        else:
-            M.append([int(x) for x in L.translate(map2bin)])
-        
-    M = np.array(M)
-    sum_number += test_symmetry2(M)
-    sum_number += 100 * test_symmetry2(M.T)
+    sum_number = part1(data, val=1)
     
     return sum_number
 
