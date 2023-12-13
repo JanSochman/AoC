@@ -255,7 +255,7 @@ def part2(data):
         num_vars = compatibility.sum()
         total_num += num_vars
 
-    return total_num
+    return int(total_num)
 
 # %% --------------------------------------------------
 res_example = part2(data_example[:])
