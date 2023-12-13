@@ -211,10 +211,11 @@ def part2(data):
                     continue        # not ok position
                 ok[o, i] = 1
 
+        # integral image
         hash_ii = np.cumsum([int(x == '#') for x in broken_records])
-        a = np.triu(np.ones((num_options, num_options)))
-        a[ok[:, 0] == 0, :] = 0
-        a[:, ok[:, 1] == 0] = 0
+        compatibility = np.triu(np.ones((num_options, num_options)))
+        compatibility[ok[:, 0] == 0, :] = 0
+        compatibility[:, ok[:, 1] == 0] = 0
         i = 0
         j = 1
         # test for residual #s in between the official #s
@@ -223,35 +224,35 @@ def part2(data):
                 first_end = sum(cnts[:i]) + len(cnts[:i]) + oi + cnts[i]
                 second_start = sum(cnts[:j]) + len(cnts[:j]) + oj - 1
                 if hash_ii[second_start] - hash_ii[first_end] > 0:
-                    a[oi, oj] = 0
+                    compatibility[oi, oj] = 0
         # test for the residual # at the beginning
         for oi in range(num_options):
             first_start = sum(cnts[:i]) + len(cnts[:i]) + oi
             if first_start > 0 and hash_ii[first_start - 1] > 0:
-                a[oi, :] = 0
+                compatibility[oi, :] = 0
                 
         for i in range(1, M-1):
             j = i + 1
-            b = np.triu(np.ones((num_options, num_options)))
-            b[ok[:, i] == 0, :] = 0
-            b[:, ok[:, j] == 0] = 0
+            next_comp = np.triu(np.ones((num_options, num_options)))
+            next_comp[ok[:, i] == 0, :] = 0
+            next_comp[:, ok[:, j] == 0] = 0
             # test for residual #s in between the official #s
             for oi in range(num_options):
                 for oj in range(oi, num_options):
                     first_end = sum(cnts[:i]) + len(cnts[:i]) + oi + cnts[i]
                     second_start = sum(cnts[:j]) + len(cnts[:j]) + oj - 1
                     if hash_ii[second_start] - hash_ii[first_end] > 0:
-                        b[oi, oj] = 0
-            a = np.matmul(a, b)
+                        next_comp[oi, oj] = 0
+            compatibility = np.matmul(compatibility, next_comp)
             
         # test for residual # at the end
         j = M - 1
         for oj in range(num_options):
             end = sum(cnts[:j]) + len(cnts[:j]) + oj + cnts[j]
             if end < N - 1 and hash_ii[N-1] - hash_ii[end] > 0:
-                a[:, oj] = 0
+                compatibility[:, oj] = 0
 
-        num_vars = a.sum()
+        num_vars = compatibility.sum()
         total_num += num_vars
 
     return total_num
