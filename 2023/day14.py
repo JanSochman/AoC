@@ -97,7 +97,7 @@ def coords_rot90cw(cols, rows, S):
 
     return new_cols, new_rows
 
-def move_north(s_cols, s_rows, c_cols, c_rows):
+def tilt(s_cols, s_rows, c_cols, c_rows):
     Ns = len(s_cols)
     Nc = len(c_cols)
     # move the circular stones north
@@ -125,10 +125,9 @@ def move_north(s_cols, s_rows, c_cols, c_rows):
     return c_cols, c_rows
 
 def print_output(s_cols, s_rows, c_cols, c_rows, S):
-    row = ['.' for _ in range(S)]
     out = []
     for _ in range(S):
-        out.append(row[:])
+        out.append(['.' for _ in range(S)])
     for c, r in zip(s_cols, s_rows):
         out[r][c] = '#'
     for c, r in zip(c_cols, c_rows):
@@ -138,13 +137,8 @@ def print_output(s_cols, s_rows, c_cols, c_rows, S):
 
 def part2(data):
     # convert to numerical np.array with # all around
-    trans = {'.': 0, 'O': 1, '#': -1}
-    str.maketrans(".O#", "123")
-    for row, L in enumerate(data):
-        data[row] = [-1] + [trans[c] for c in L] + [-1]
-    data.insert(0, [-1] * len(data[0]))
-    data.append([-1] * len(data[0]))
-    data = np.array(data)
+    data = np.array([[{'O': 1, '#': -1, '.': 0}[c] for c in line] for line in data])
+    data = np.pad(data, 1, constant_values=-1)
     
     S = data.shape[0]
 
@@ -157,19 +151,19 @@ def part2(data):
     load = []
     # still too slow, running just for enough time to find the period
     for _ in range(200):
-        c_cols, c_rows = move_north(s_cols, s_rows, c_cols, c_rows)
+        c_cols, c_rows = tilt(s_cols, s_rows, c_cols, c_rows)
         c_cols, c_rows = coords_rot90cw(c_cols, c_rows, S)
         s_cols, s_rows = coords_rot90cw(s_cols, s_rows, S)
 
-        c_cols, c_rows = move_north(s_cols, s_rows, c_cols, c_rows)
+        c_cols, c_rows = tilt(s_cols, s_rows, c_cols, c_rows)
         c_cols, c_rows = coords_rot90cw(c_cols, c_rows, S)
         s_cols, s_rows = coords_rot90cw(s_cols, s_rows, S)
 
-        c_cols, c_rows = move_north(s_cols, s_rows, c_cols, c_rows)
+        c_cols, c_rows = tilt(s_cols, s_rows, c_cols, c_rows)
         c_cols, c_rows = coords_rot90cw(c_cols, c_rows, S)
         s_cols, s_rows = coords_rot90cw(s_cols, s_rows, S)
 
-        c_cols, c_rows = move_north(s_cols, s_rows, c_cols, c_rows)
+        c_cols, c_rows = tilt(s_cols, s_rows, c_cols, c_rows)
         c_cols, c_rows = coords_rot90cw(c_cols, c_rows, S)
         s_cols, s_rows = coords_rot90cw(s_cols, s_rows, S)
 
