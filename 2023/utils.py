@@ -30,6 +30,10 @@ class StateMachine:
             # Move the line pointer
             current_line += 1
 
+# transpose a list of rows as if it was a matrix
+# s = ['123', '456', '789']
+# [''.join(i) for i in zip(*s)]
+
 # import operator
 # a = (1,2,3)
 # b = (5,6,7)
