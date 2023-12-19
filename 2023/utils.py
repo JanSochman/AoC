@@ -30,6 +30,9 @@ class StateMachine:
             # Move the line pointer
             current_line += 1
 
+# a = 10
+# print(f"{a = }")
+
 # transpose a list of rows as if it was a matrix
 # s = ['123', '456', '789']
 # [''.join(i) for i in zip(*s)]
@@ -61,5 +64,5 @@ class StateMachine:
 
 
 # close-form Fibonacci numbers (source: https://orlp.net/blog/magical-fibonacci-formulae/)
-f = lambda n:(b:=2<<n)**n*b//(b*b-b-1)%b
-[f(n) for n in range(10)]
+# f = lambda n:(b:=2<<n)**n*b//(b*b-b-1)%b
+# [f(n) for n in range(10)]
