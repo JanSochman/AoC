@@ -14,7 +14,7 @@ from scipy.spatial.distance import cdist
 import copy
 from collections import deque, Counter, defaultdict, namedtuple
 import parsy as ps
-import portion as P
+import portion as P     # data structure and operations for intervals
 import math
 import matplotlib.pyplot as plt
 from skimage.morphology import flood_fill
