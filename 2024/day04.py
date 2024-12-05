@@ -64,7 +64,7 @@ def part1(data):
         total += test_line(L)
 
     # data transposed
-    data_t = [''.join(list(t)) for t in [*zip(*data)]]
+    data_t = [''.join(list(t)) for t in zip(*data)]
     for L in data_t:
         total += test_line(L)
 
