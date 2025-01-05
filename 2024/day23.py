@@ -88,10 +88,10 @@ def part1(data):
     all_cliques = set()
     for clique in nx.find_cliques(G):
         if len(clique) == k:
-            all_cliques.add(tuple(sorted(clique)))
+            all_cliques.add(tuple(clique))
         elif len(clique) > k:
             for mini_clique in combinations(clique, k):
-                all_cliques.add(tuple(sorted(mini_clique)))
+                all_cliques.add(tuple(mini_clique))
                 
     t_cliques = [c for c in list(all_cliques) if sum([n[0] == 't' for n in list(c)]) > 0]
     return len(t_cliques)
