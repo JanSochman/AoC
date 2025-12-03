@@ -38,9 +38,7 @@ puzzle_day = 2
 puzzle = Puzzle(year=year, day=puzzle_day)
 print(puzzle.input_data[:200])
 
-example1 = """11-22,95-115,998-1012,1188511880-1188511890,222220-222224,1698522-1698528,446443-446449,38593856-38593862,565653-565659,824824821-824824827,2121212118-2121212124"""
-
-data_example = parse_input(example1)
+data_example = parse_input(puzzle.examples[0].input_data)
 data_full = parse_input(puzzle.input_data)
 
 # %% --------------------------------------------------
@@ -79,15 +77,13 @@ print(res_full)
 
 # %% --------------------------------------------------
 # ========== PART 2 ==========
-example2 = example1
-
-data_example = parse_input(example2)
+data_example = parse_input(puzzle.examples[-1].input_data)
 
 # %% --------------------------------------------------
 def part2(data):
     data = data[0].split(",")
     total = 0
-    wrong_id_pattern = re.compile(r"^(\d+)\1{1,}$") 
+    wrong_id_pattern = re.compile(r"^(\d+)\1+$") 
 
     for L in data:
         left, right = L.split('-')
