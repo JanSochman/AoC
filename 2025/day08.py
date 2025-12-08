@@ -23,6 +23,7 @@ from shapely.geometry import Polygon
 from einops import rearrange
 import networkx as nx
 import heapq
+import time
 
 # for regular expressions debugging: https://pythex.org/
 
@@ -60,9 +61,7 @@ def part1(data, num_iters):
         low_id = min(circuits_ids[r], circuits_ids[c])
         high_id = max(circuits_ids[r], circuits_ids[c])
         circuits_ids[circuits_ids == high_id] = low_id
-    csizes = Counter()
-    for id in circuits_ids:
-        csizes[id] += 1
+    csizes = Counter(circuits_ids)
     csizes = np.sort([csizes[k] for k in csizes.keys()])[::-1]
 
     return csizes[0] * csizes[1] * csizes[2]
@@ -72,8 +71,11 @@ res_example = part1(data_example[:], 10)
 print(res_example)
 
 # %% --------------------------------------------------
+t0 = time.time()
 res_full = part1(data_full[:], 1000)
+t1 = time.time()
 print(res_full)
+print(f'{t1-t0}s')
 
 # %% --------------------------------------------------
 # ========== PART 2 ==========
@@ -112,7 +114,10 @@ res_example = part2(data_example[:])
 print(res_example)
 
 # %% --------------------------------------------------
+t0 = time.time()
 res_full = part2(data_full[:])
+t1 = time.time()
 print(res_full)
+print(f'{t1-t0}s')
 
 # %% --------------------------------------------------
