@@ -109,6 +109,18 @@ def part2(data):
         
     return wall_dist
 
+def part2_v2(data): # not out of my head, but cool! wish I have discovered this myself...
+    jboxes = np.array([[float(c) for c in line.split(',')] for line in data])
+    N = jboxes.shape[0]
+    dists = cdist(jboxes, jboxes) + np.diag(np.ones(N) * np.inf)
+
+    md = dists.min(axis=0)
+    idx_1 = np.argmax(md)
+    idx_2 = np.argmin(dists[idx_1, :])
+    wall_dist = int(jboxes[idx_1, 0] * jboxes[idx_2, 0])
+        
+    return wall_dist
+
 # %% --------------------------------------------------
 res_example = part2(data_example[:])
 print(res_example)
